@@ -1,0 +1,245 @@
+.nav {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    z-index: 1000;
+    padding: 1rem 0;
+}
+
+.navContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.logoIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.logoText {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.02em;
+}
+
+.menu {
+    display: none;
+    list-style: none;
+    gap: 0.125rem;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .menu {
+        display: flex;
+    }
+}
+
+.menu li {
+    position: relative;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+    transition: all var(--transition-base);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+}
+
+.menu a:hover {
+    color: var(--primary-purple);
+    background: rgba(139, 92, 246, 0.05);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.2s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dropdownMenu a {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+    font-size: 0.9375rem;
+}
+
+.dropdownMenu a:hover {
+    background: var(--gray-50);
+    color: var(--primary-purple);
+}
+
+.ctaContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+.contactLink {
+    display: none;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+    transition: color var(--transition-base);
+}
+
+@media (min-width: 1024px) {
+    .contactLink {
+        display: block;
+    }
+}
+
+.contactLink:hover {
+    color: var(--primary-purple);
+}
+
+.btnArrow {
+    transition: transform var(--transition-base);
+}
+
+.btn:hover .btnArrow {
+    transform: translateX(2px);
+}
+
+.menuToggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1001;
+}
+
+@media (min-width: 1024px) {
+    .menuToggle {
+        display: none;
+    }
+}
+
+.menuToggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--gray-700);
+    transition: all var(--transition-base);
+    border-radius: 2px;
+}
+
+.menuToggle span.active:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.menuToggle span.active:nth-child(2) {
+    opacity: 0;
+}
+
+.menuToggle span.active:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+.mobileMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: var(--spacing-lg) 0;
+    animation: fadeIn 0.3s ease-out;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin-top: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: var(--radius-md);
+}
+
+@media (min-width: 1024px) {
+    .mobileMenu {
+        display: none;
+    }
+}
+
+.mobileMenu a {
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+    transition: all var(--transition-base);
+    font-size: 0.9375rem;
+    display: block;
+}
+
+.mobileMenu a:hover {
+    background: var(--gray-50);
+    color: var(--primary-purple);
+}
+
+.mobileMenu .btn {
+    margin-top: var(--spacing-sm);
+    justify-content: center;
+    width: 100%;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .nav {
+        padding: 0.875rem 0;
+    }
+    
+    .logoText {
+        font-size: 1.25rem;
+    }
+    
+    .logoIcon {
+        width: 32px;
+        height: 32px;
+    }
+}

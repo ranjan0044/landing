@@ -1,0 +1,212 @@
+.section {
+    position: relative;
+    padding: 5rem 0;
+    background: var(--background);
+    overflow: hidden;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.title {
+    margin-bottom: var(--spacing-md);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    font-size: clamp(1.0625rem, 1.25vw, 1.1875rem);
+    color: var(--gray-600);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.productsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.productCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    min-height: 280px;
+    position: relative;
+    overflow: visible;
+    border: none;
+    padding: var(--spacing-xl);
+}
+
+.productIcon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-xs);
+    color: white;
+}
+
+.productCard.yellow .productIcon {
+    color: var(--gray-900);
+}
+
+.productContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.productName {
+    font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+    margin: 0;
+    font-weight: 700;
+}
+
+.productDesc {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.6;
+    font-size: 0.9375rem;
+}
+
+.productCard.yellow .productDesc {
+    color: var(--gray-700);
+}
+
+.productFooter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: auto;
+}
+
+.viewBtn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: inherit;
+    font-weight: 600;
+    padding: 12px 20px;
+}
+
+.viewBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.productCard.yellow .viewBtn {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+    color: var(--gray-900);
+}
+
+.productCard.yellow .viewBtn:hover {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* Color Variants */
+.productCard.purple {
+    background: linear-gradient(135deg, #A78BFA 0%, var(--primary-purple) 100%);
+    color: white;
+}
+
+.productCard.yellow {
+    background: linear-gradient(135deg, #FDE68A 0%, var(--secondary-yellow) 100%);
+    color: var(--gray-900);
+}
+
+.productCard.pink {
+    background: linear-gradient(135deg, #FBCFE8 0%, #EC4899 100%);
+    color: white;
+}
+
+.productCard.blue {
+    background: linear-gradient(135deg, #93C5FD 0%, #3B82F6 100%);
+    color: white;
+}
+
+.productCard.green {
+    background: linear-gradient(135deg, #86EFAC 0%, #10B981 100%);
+    color: white;
+}
+
+.productCard.orange {
+    background: linear-gradient(135deg, #FED7AA 0%, #F97316 100%);
+    color: white;
+}
+
+.cta {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background: var(--secondary-yellow-bg);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.ctaText {
+    font-size: clamp(1.125rem, 1.25vw, 1.25rem);
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-md);
+}
+
+@media (max-width: 1024px) {
+    .section {
+        padding: 4rem 0;
+    }
+    
+    .productsGrid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--spacing-md);
+    }
+    
+    .header {
+        margin-bottom: var(--spacing-2xl);
+    }
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 3rem 0;
+    }
+    
+    .productsGrid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-2xl);
+    }
+    
+    .productCard {
+        min-height: 260px;
+        padding: var(--spacing-lg);
+    }
+    
+    .productIcon {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .cta {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .productCard {
+        min-height: 240px;
+    }
+}

@@ -1,0 +1,9 @@
+export { default as Navigation } from './Navigation';
+export { default as HeroSection } from './HeroSection';
+export { default as CompanyIdentity } from './CompanyIdentity';
+export { default as ProductsEcosystem } from './ProductsEcosystem';
+export { default as AutomationSection } from './AutomationSection';
+export { default as TargetAudience } from './TargetAudience';
+export { default as TechnologyTrust } from './TechnologyTrust';
+export { default as CTASection } from './CTASection';
+export { default as Footer } from './Footer';

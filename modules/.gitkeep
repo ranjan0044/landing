@@ -1,0 +1,7 @@
+# Modules Directory
+
+This directory contains all Yantras modules/products.
+Each module is self-contained and can depend on other modules.
+
+See MODULE_STRUCTURE.md for detailed structure guidelines.
+
