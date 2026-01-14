@@ -1,0 +1,278 @@
+PHASE 1 — ENVIRONMENT & TOOLING (DONE)
+
+Make the machine ready
+
+Goal
+
+Same project runs anywhere
+
+No “it works on my machine” issues
+
+Tasks
+
+Install Node.js
+
+Install PostgreSQL
+
+Initialize Next.js project
+
+Initialize Prisma
+
+Setup .env
+
+Setup Git
+
+Deliverables ✔
+
+App runs locally
+
+Database connects
+
+Prisma migrations work
+
+Git repo clean
+
+🟦 PHASE 2 — PROJECT STRUCTURE (DONE)
+
+Decide where things live
+
+Goal
+
+Prevent spaghetti code
+
+Make future features predictable
+
+Structure you now have ✔
+app/        → routing + API
+src/        → business logic
+prisma/     → data schema
+
+
+Inside src/:
+
+auth/       → authentication logic
+domain/     → pure business rules
+modules/    → ERP modules
+services/   → orchestration
+lib/        → shared utilities
+
+
+👉 This is enterprise-grade structure.
+
+🟦 PHASE 3 — AUTHENTICATION (DONE)
+
+Who is the user? Which shop?
+
+Goal
+
+Identify user
+
+Identify tenant (shop)
+
+Secure all future features
+
+What you implemented ✔
+
+Signup
+
+Creates Shop
+
+Creates Owner user
+
+Login
+
+Session (JWT + cookie)
+
+Prisma user storage
+
+Deliverables ✔
+
+/api/auth/signup
+
+/api/auth/login
+
+Session cookie
+
+Shop-aware foundation
+
+🟦 PHASE 4 — REQUEST CONTEXT & MIDDLEWARE (NEXT)
+
+Make every request shop-aware
+
+Goal
+
+Every API knows:
+
+Who is calling?
+
+Which shop?
+
+No API manually checks auth again and again
+
+Tasks (NEXT STEP)
+
+Global middleware
+
+Extract session
+
+Attach shopId to request
+
+Block unauthorized requests
+
+Deliverables
+
+Central auth guard
+
+Cleaner APIs
+
+Security baseline
+
+👉 This is the bridge between auth and features.
+
+🟦 PHASE 5 — CORE DOMAIN MODELS (FOUNDATION)
+
+Business logic, not UI
+
+Goal
+
+Encode real business rules
+
+Keep logic independent of framework
+
+What comes here
+
+Shop domain
+
+Dealer relationship domain
+
+Product domain
+
+Invoice domain
+
+GST logic
+
+Example
+domain/
+ ├─ invoice/
+ │  ├─ Invoice.ts
+ │  ├─ GstCalculator.ts
+ ├─ dealer/
+ │  ├─ DealerRelation.ts
+
+
+👉 This prevents bugs and rewrites later.
+
+🟦 PHASE 6 — MODULE 1: INVOICING (FIRST REAL FEATURE)
+
+Start earning value
+
+Why invoicing first?
+
+Works without inventory
+
+Validates GST logic
+
+Immediate business value
+
+Steps
+
+Invoice schema
+
+Invoice domain logic
+
+Invoice API
+
+PDF generation
+
+Print-friendly format
+
+Deliverables
+
+Create invoice
+
+View invoice
+
+Download PDF
+
+GST / Non-GST handling
+
+🟦 PHASE 7 — MODULE 2: PRODUCTS
+
+Add product intelligence
+
+Tasks
+
+Product master
+
+Pricing
+
+Dealer visibility rules
+
+🟦 PHASE 8 — MODULE 3: INVENTORY
+
+Stock control
+
+Tasks
+
+Stock in/out
+
+Ledger
+
+Invoice-linked stock movement
+
+🟦 PHASE 9 — MODULE 4: POS
+
+Fast selling
+
+Tasks
+
+Barcode
+
+Real-time stock
+
+Cash/GST toggle
+
+🟦 PHASE 10 — ADMIN & SaaS FEATURES
+
+Scale the platform
+
+Module enable/disable
+
+Billing plans
+
+Trial expiry
+
+Usage limits
+
+🧠 THE GOLDEN RULE (REMEMBER THIS)
+
+Auth → Context → Domain → Module → UI
+
+Never jump steps.
+
+🧪 HOW YOU KNOW YOU’RE DOING IT RIGHT
+
+Ask yourself:
+
+“Did I finish this phase fully?”
+
+“Can I explain this feature to another dev?”
+
+“Will this need rewriting later?”
+
+If answers are yes → move on.
+
+🟢 YOUR CURRENT POSITION
+
+You are here 👇
+
+PHASE 4 → Middleware & Request Context
+
+
+This is exactly correct.
+
+🔜 NEXT ACTION (VERY CLEAR)
+
+When ready, say:
+
+middleware

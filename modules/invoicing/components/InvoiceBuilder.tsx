@@ -7,6 +7,7 @@ import { InvoiceBuilderData } from '../types/invoice-builder.types';
 import { generateInvoiceNumber } from '../utils/invoiceCalculations';
 
 const initialData: InvoiceBuilderData = {
+  invoiceType: 'non_tax',
   business: {
     name: '',
     address: '',
@@ -17,7 +18,8 @@ const initialData: InvoiceBuilderData = {
     email: '',
     phone: '',
     website: '',
-    taxId: '',
+    gstin: '',
+    pan: '',
   },
   client: {
     name: '',
@@ -28,15 +30,19 @@ const initialData: InvoiceBuilderData = {
     state: '',
     zipCode: '',
     country: '',
-    taxId: '',
+    gstin: '',
+    pan: '',
   },
-  invoiceNumber: generateInvoiceNumber(),
+  // Leave invoiceNumber empty for SSR to avoid hydration mismatch;
+  // we'll generate a client-only value after mount.
+  invoiceNumber: '',
   issueDate: new Date().toISOString().split('T')[0],
   dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   items: [
     {
       id: '1',
       description: '',
+      hsnSac: '',
       quantity: 1,
       unitPrice: 0,
       taxRate: 0,
@@ -53,6 +59,15 @@ const initialData: InvoiceBuilderData = {
 
 export default function InvoiceBuilder() {
   const [invoiceData, setInvoiceData] = useState<InvoiceBuilderData>(initialData);
+
+  // Generate invoice number on the client only, after initial render,
+  // so server and client markup match during hydration.
+  useEffect(() => {
+    setInvoiceData((prev) => {
+      if (prev.invoiceNumber) return prev;
+      return { ...prev, invoiceNumber: generateInvoiceNumber() };
+    });
+  }, []);
 
   const updateInvoiceData = (updates: Partial<InvoiceBuilderData>) => {
     setInvoiceData((prev) => ({ ...prev, ...updates }));

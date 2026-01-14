@@ -5,33 +5,51 @@
 
 export interface BusinessInfo {
   name: string;
+  phone?: string;
+  email?: string;
   address?: string;
   city?: string;
   state?: string;
   zipCode?: string;
   country?: string;
-  email?: string;
-  phone?: string;
+
+  /**
+   * Tax invoice (GST) fields
+   * - gstin: GST Identification Number
+   * - pan: Permanent Account Number (India)
+   */
+  gstin?: string;
+  pan?: string;
+
+  // Optional fields for future expansion
   website?: string;
-  taxId?: string;
   logo?: string;
 }
 
 export interface ClientInfo {
   name: string;
-  email?: string;
   phone?: string;
+  email?: string;
   address?: string;
   city?: string;
   state?: string;
   zipCode?: string;
   country?: string;
-  taxId?: string;
+
+  /**
+   * Tax invoice (GST) fields
+   */
+  gstin?: string;
+  pan?: string;
 }
 
 export interface InvoiceItemInput {
   id: string;
   description: string;
+  /**
+   * Tax invoice (GST) field
+   */
+  hsnSac?: string;
   quantity: number;
   unitPrice: number;
   taxRate: number;
@@ -49,7 +67,10 @@ export interface InvoiceTemplate {
   };
 }
 
+export type InvoiceType = 'tax' | 'non_tax';
+
 export interface InvoiceBuilderData {
+  invoiceType: InvoiceType;
   business: BusinessInfo;
   client: ClientInfo;
   invoiceNumber: string;

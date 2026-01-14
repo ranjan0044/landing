@@ -1,0 +1,284 @@
+ERP Role & Permission System
+With SUPER_ADMIN hierarchy & restrictions
+Project Context
+
+We are building a multi-tenant ERP SaaS using Next.js (App Router), Prisma, PostgreSQL.
+
+The system has two distinct role layers:
+
+Platform-level roles (SaaS / ERP owner side)
+
+Shop-level roles (tenant side)
+
+These layers must never be mixed.
+
+1️⃣ PLATFORM-LEVEL ROLES (CRITICAL)
+Role Types (Platform)
+🟣 ROOT_ADMIN (ERP Owner / GOD MODE)
+
+Only 1 (or very few) accounts
+
+Represents the actual SaaS owner
+
+Has absolute authority
+
+Cannot be deleted or blocked by anyone
+
+Can create / manage all other admins
+
+🔵 SUPER_ADMIN (Platform Admin)
+
+Created by ROOT_ADMIN
+
+Has very high privileges
+
+Used for:
+
+Support
+
+Debugging
+
+Operations
+
+Has restrictions compared to ROOT_ADMIN
+
+1.1 ROOT_ADMIN (Ultimate Authority)
+Definition
+
+Platform owner
+
+Not tied to any shop (shopId = NULL)
+
+Final authority over the system
+
+ROOT_ADMIN Capabilities
+
+Create / edit / disable:
+
+SUPER_ADMIN
+
+Shops
+
+Users of any shop
+
+View & modify:
+
+Any invoice
+
+Any quotation
+
+Any product
+
+Any inventory
+
+Enable / disable modules
+
+Change billing plans
+
+Access all system logs
+
+Emergency overrides
+
+ROOT_ADMIN Restrictions
+
+❌ Cannot delete self
+
+❌ Cannot be downgraded
+
+❌ Cannot be blocked
+
+1.2 SUPER_ADMIN (Platform Operator)
+Definition
+
+Trusted internal admin
+
+Created only by ROOT_ADMIN
+
+Not tied to any shop (shopId = NULL)
+
+SUPER_ADMIN Capabilities
+
+View all shops
+
+View all users
+
+View invoices, quotations, inventory
+
+Block / unblock shop staff
+
+Reset passwords
+
+Force logout users
+
+Debug user issues
+
+Assist shop owners
+
+SUPER_ADMIN Restrictions (VERY IMPORTANT)
+
+❌ Cannot delete ROOT_ADMIN
+
+❌ Cannot modify ROOT_ADMIN
+
+❌ Cannot change billing plans
+
+❌ Cannot delete shops permanently
+
+❌ Cannot create another ROOT_ADMIN
+
+❌ Cannot remove platform ownership
+
+2️⃣ SHOP-LEVEL ROLES (TENANT SIDE)
+
+These roles exist inside a shop only and are always bound to shopId.
+
+🟢 SHOP_OWNER
+
+Full control of own shop only
+
+Can manage:
+
+Invoices
+
+Quotations
+
+Products
+
+Inventory
+
+POS
+
+Staff permissions
+
+Cannot:
+
+Access platform-level data
+
+Change SaaS billing plans
+
+Affect other shops
+
+Access platform admin routes
+
+🟢 SHOP_ADMIN
+
+Operational manager
+
+Can manage:
+
+Invoices
+
+Quotations
+
+Inventory
+
+Cannot:
+
+Manage staff permissions
+
+Delete shop
+
+Change billing
+
+Remove owner
+
+🟢 STAFF
+
+Permissions controlled by Shop Owner
+
+Can be toggled per feature
+
+Cannot:
+
+Manage users
+
+Access settings
+
+Delete critical data
+
+3️⃣ DATABASE DESIGN (MANDATORY)
+User Model
+User {
+  id
+  email
+  password
+  role        // ROOT_ADMIN | SUPER_ADMIN | SHOP_OWNER | SHOP_ADMIN | STAFF
+  shopId?     // NULL for ROOT_ADMIN & SUPER_ADMIN
+}
+
+Enforcement Rules
+
+ROOT_ADMIN → shopId = NULL
+
+SUPER_ADMIN → shopId = NULL
+
+All shop roles → shopId REQUIRED
+
+Only ROOT_ADMIN can assign platform roles
+
+4️⃣ AUTHORIZATION LOGIC
+if (user.role === "ROOT_ADMIN") {
+  allowEverything();
+}
+
+if (user.role === "SUPER_ADMIN") {
+  allowPlatformOps();
+  denyRootActions();
+}
+
+if (user.shopId !== resource.shopId) {
+  deny();
+}
+
+5️⃣ ROUTING STRUCTURE
+/app
+  /(dashboard)        → Shop ERP (shop roles only)
+  /super-admin        → Platform admin panel
+  /root-admin         → Owner-only panel (optional, hidden)
+
+
+Shop users must never access platform routes
+
+SUPER_ADMIN must never access ROOT_ADMIN-only actions
+
+6️⃣ SECURITY CONSTRAINTS (NON-NEGOTIABLE)
+
+SUPER_ADMIN cannot:
+
+Delete ROOT_ADMIN
+
+Downgrade ROOT_ADMIN
+
+Transfer ownership
+
+Shop users cannot:
+
+Escalate to platform roles
+
+Access other shops
+
+Platform roles bypass shop restrictions safely
+
+7️⃣ IMPLEMENTATION GOALS
+
+Clear hierarchy
+
+No circular permissions
+
+No accidental privilege escalation
+
+Future-proof SaaS governance
+
+Zero refactor later
+
+Output Expected from Agent
+
+Prisma schema updates
+
+Role enums
+
+Auth logic & guards
+
+Middleware rules
+
+Clear comments explaining hierarchy

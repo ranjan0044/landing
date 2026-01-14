@@ -14,6 +14,8 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   const selectedTemplate = invoiceTemplates.find((t) => t.id === data.template) || invoiceTemplates[0];
   const totals = calculateInvoiceTotals(data.items, data.taxRate, data.discount);
 
+  const isTaxInvoice = data.invoiceType === 'tax';
+
   const handlePrint = () => {
     window.print();
   };
@@ -84,12 +86,18 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <h1 style={{ fontSize: '2rem', fontWeight: 700, color: selectedTemplate.colors.primary, marginBottom: '0.5rem' }}>
-                INVOICE
+                {isTaxInvoice ? 'TAX INVOICE' : 'INVOICE'}
               </h1>
               {data.invoiceNumber && (
                 <p style={{ color: '#6B7280', fontSize: '0.875rem' }}>
                   Invoice #: {data.invoiceNumber}
                 </p>
+              )}
+              {isTaxInvoice && (data.business.gstin || data.business.pan) && (
+                <div style={{ marginTop: '0.5rem', color: '#6B7280', fontSize: '0.875rem' }}>
+                  {data.business.gstin && <div>GSTIN: {data.business.gstin}</div>}
+                  {data.business.pan && <div>PAN: {data.business.pan}</div>}
+                </div>
               )}
             </div>
             {data.business.name && (
@@ -97,13 +105,13 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
                 <div style={{ fontWeight: 700, fontSize: '1.125rem', marginBottom: '0.5rem', color: '#111827' }}>
                   {data.business.name}
                 </div>
-                {data.business.address && <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>{data.business.address}</div>}
-                {(data.business.city || data.business.state || data.business.zipCode) && (
+                {isTaxInvoice && data.business.address && <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>{data.business.address}</div>}
+                {isTaxInvoice && (data.business.city || data.business.state || data.business.zipCode) && (
                   <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>
                     {[data.business.city, data.business.state, data.business.zipCode].filter(Boolean).join(', ')}
                   </div>
                 )}
-                {data.business.country && <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>{data.business.country}</div>}
+                {isTaxInvoice && data.business.country && <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>{data.business.country}</div>}
                 {data.business.email && <div style={{ fontSize: '0.875rem', color: '#6B7280', marginTop: '0.25rem' }}>{data.business.email}</div>}
                 {data.business.phone && <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>{data.business.phone}</div>}
               </div>
@@ -117,11 +125,13 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
             <div style={{ fontWeight: 600, marginBottom: '0.5rem', color: '#374151' }}>Bill To:</div>
             <div style={{ fontSize: '0.9375rem', color: '#6B7280' }}>
               <div style={{ fontWeight: 600, color: '#111827', marginBottom: '0.25rem' }}>{data.client.name}</div>
-              {data.client.address && <div>{data.client.address}</div>}
-              {(data.client.city || data.client.state || data.client.zipCode) && (
+              {isTaxInvoice && data.client.gstin && <div>GSTIN: {data.client.gstin}</div>}
+              {isTaxInvoice && data.client.pan && <div>PAN: {data.client.pan}</div>}
+              {isTaxInvoice && data.client.address && <div>{data.client.address}</div>}
+              {isTaxInvoice && (data.client.city || data.client.state || data.client.zipCode) && (
                 <div>{[data.client.city, data.client.state, data.client.zipCode].filter(Boolean).join(', ')}</div>
               )}
-              {data.client.country && <div>{data.client.country}</div>}
+              {isTaxInvoice && data.client.country && <div>{data.client.country}</div>}
               {data.client.email && <div style={{ marginTop: '0.25rem' }}>{data.client.email}</div>}
               {data.client.phone && <div>{data.client.phone}</div>}
             </div>
@@ -149,26 +159,42 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: `2px solid ${selectedTemplate.colors.primary}` }}>
-                <th style={{ padding: '0.75rem', textAlign: 'left', fontWeight: 600, color: '#374151' }}>Description</th>
-                <th style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#374151' }}>Quantity</th>
-                <th style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#374151' }}>Price</th>
-                <th style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#374151' }}>Total</th>
+                <th style={{ padding: '0.75rem', textAlign: 'left', fontWeight: 600, color: '#374151' }}>Item</th>
+                {isTaxInvoice && (
+                  <th style={{ padding: '0.75rem', textAlign: 'left', fontWeight: 600, color: '#374151' }}>HSN/SAC</th>
+                )}
+                {isTaxInvoice && (
+                  <th style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#374151' }}>GST %</th>
+                )}
+                <th style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#374151' }}>Qty</th>
+                <th style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#374151' }}>Rate</th>
+                <th style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#374151' }}>Amount</th>
               </tr>
             </thead>
             <tbody>
               {data.items.map((item, index) => {
-                const itemTotal = item.quantity * item.unitPrice;
+                const amount = item.quantity * item.unitPrice;
+                const gst = isTaxInvoice ? (amount * (item.taxRate || 0)) / 100 : 0;
+                const cgst = isTaxInvoice ? gst / 2 : 0;
+                const sgst = isTaxInvoice ? gst / 2 : 0;
+                const lineTotal = amount + gst;
                 return (
                   <tr key={item.id} style={{ borderBottom: '1px solid #E5E7EB' }}>
                     <td style={{ padding: '0.75rem', color: '#111827' }}>
                       {item.description || `Item ${index + 1}`}
                     </td>
+                    {isTaxInvoice && (
+                      <td style={{ padding: '0.75rem', color: '#6B7280' }}>{item.hsnSac || '-'}</td>
+                    )}
+                    {isTaxInvoice && (
+                      <td style={{ padding: '0.75rem', textAlign: 'right', color: '#6B7280' }}>{item.taxRate || 0}</td>
+                    )}
                     <td style={{ padding: '0.75rem', textAlign: 'right', color: '#6B7280' }}>{item.quantity}</td>
                     <td style={{ padding: '0.75rem', textAlign: 'right', color: '#6B7280' }}>
                       {formatCurrency(item.unitPrice, data.currency)}
                     </td>
-                    <td style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#111827' }}>
-                      {formatCurrency(itemTotal, data.currency)}
+                    <td style={{ padding: '0.75rem', textAlign: 'right', color: '#6B7280' }}>
+                      {formatCurrency(lineTotal, data.currency)}
                     </td>
                   </tr>
                 );
@@ -183,11 +209,17 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
             <span style={{ color: '#6B7280' }}>Subtotal:</span>
             <span style={{ fontWeight: 600, color: '#111827' }}>{formatCurrency(totals.subtotal, data.currency)}</span>
           </div>
-          {totals.totalTax > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #E5E7EB' }}>
-              <span style={{ color: '#6B7280' }}>Tax:</span>
-              <span style={{ fontWeight: 600, color: '#111827' }}>{formatCurrency(totals.totalTax, data.currency)}</span>
-            </div>
+          {isTaxInvoice && totals.totalTax > 0 && (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #E5E7EB' }}>
+                <span style={{ color: '#6B7280' }}>CGST:</span>
+                <span style={{ fontWeight: 600, color: '#111827' }}>{formatCurrency(totals.totalTax / 2, data.currency)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #E5E7EB' }}>
+                <span style={{ color: '#6B7280' }}>SGST:</span>
+                <span style={{ fontWeight: 600, color: '#111827' }}>{formatCurrency(totals.totalTax / 2, data.currency)}</span>
+              </div>
+            </>
           )}
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0', marginTop: '0.5rem', borderTop: `2px solid ${selectedTemplate.colors.primary}`, fontSize: '1.125rem' }}>
             <span style={{ fontWeight: 700, color: '#111827' }}>Total:</span>

@@ -1,0 +1,265 @@
+Billing Module (Invoices + Quotations)
+
+This is how ERPs (including Tally, Odoo) think about it.
+
+🧱 BILLING MODULE — FINAL SCOPE (WITH QUOTATION)
+
+Below is the complete, correct list of what we will build.
+
+1️⃣ DOCUMENT TYPES (CORE)
+
+We will support TWO document types, each with TWO tax modes.
+
+📄 Document Types
+
+Quotation
+
+Invoice
+
+💰 Tax Types (for both)
+
+Tax Invoice (GST)
+
+Non-Tax Invoice (Non-GST)
+
+So total combinations:
+
+Document	Tax Mode
+Quotation	GST
+Quotation	Non-GST
+Invoice	GST
+Invoice	Non-GST
+
+✅ Same structure
+✅ Same UI
+✅ Same calculations (GST differs)
+
+2️⃣ QUOTATION — WHAT IT IS & HOW IT WORKS
+Purpose
+
+Sent before sale
+
+No stock impact
+
+No GST liability
+
+Can be converted to invoice later
+
+Quotation Status
+
+DRAFT
+
+SENT
+
+EXPIRED
+
+CONVERTED
+
+Key Rule (VERY IMPORTANT)
+
+A quotation NEVER affects inventory or GST filing.
+
+3️⃣ INVOICE — WHAT IT IS & HOW IT WORKS
+Invoice Status
+
+DRAFT
+
+ISSUED
+
+CANCELLED
+
+Key Rule
+
+Invoice is the legal & accounting document.
+
+4️⃣ QUOTATION → INVOICE FLOW (CRITICAL DESIGN)
+
+This is why quotation belongs here.
+
+Flow
+Quotation → Review → Convert → Invoice
+
+Conversion Rules
+
+Copy customer details
+
+Copy line items
+
+Lock prices
+
+Generate new invoice number
+
+Quotation marked as CONVERTED
+
+🚫 No editing quotation after conversion.
+
+5️⃣ DATA MODEL (HIGH LEVEL)
+Shared Fields (Quotation & Invoice)
+
+Document Number
+
+Document Date
+
+Document Type (QUOTATION / INVOICE)
+
+Tax Mode (GST / NON_GST)
+
+Customer details
+
+Line items
+
+Subtotal
+
+Discount
+
+Tax breakdown
+
+Grand total
+
+Differences
+Feature	Quotation	Invoice
+GST Liability	❌	✅
+Stock Impact	❌	Later
+Legal Document	❌	✅
+Convertible	→ Invoice	❌
+6️⃣ GST LOGIC (SAME ENGINE)
+
+We will build ONE GST engine and reuse it.
+
+GST Engine Handles:
+
+CGST + SGST
+
+IGST
+
+Zero tax (Non-GST)
+
+Line-wise calculation
+
+Rounding
+
+Used by:
+
+GST Quotation
+
+GST Invoice
+
+7️⃣ NUMBERING SYSTEM (SEPARATE SEQUENCES)
+
+Very important for accounting.
+
+Example:
+
+QUO-0001
+QUO-0002
+
+INV-0001
+INV-0002
+
+
+Each:
+
+Per shop
+
+Sequential
+
+Independent
+
+8️⃣ PDF GENERATION (FOR BOTH)
+Quotation PDF
+
+Marked clearly as “QUOTATION”
+
+Validity date
+
+Terms & conditions
+
+Invoice PDF
+
+“TAX INVOICE”
+
+GST breakup
+
+Legal footer
+
+Both:
+
+Printable
+
+A4
+
+CA-friendly
+
+9️⃣ EXPORTS (MAINLY FOR INVOICES)
+Invoice Exports
+
+CSV
+
+Excel
+
+GST filing format (later)
+
+Quotation Exports
+
+Optional CSV (later)
+
+🔌 10️⃣ APIs (API-FIRST)
+Quotation APIs
+
+POST /api/quotations
+
+GET /api/quotations
+
+GET /api/quotations/:id
+
+POST /api/quotations/:id/convert
+
+Invoice APIs
+
+POST /api/invoices
+
+GET /api/invoices
+
+GET /api/invoices/:id
+
+POST /api/invoices/:id/cancel
+
+🧱 11️⃣ UI (MINIMAL FOR NOW)
+
+Only functional UI, not final panel.
+
+Quotation list
+
+Create quotation
+
+Convert to invoice
+
+Invoice list
+
+Invoice preview
+
+No permissions, no fancy dashboard.
+
+❌ WHAT WE ARE STILL NOT DOING
+
+Roles & permissions
+
+Inventory linkage
+
+Dealer pricing
+
+POS
+
+Billing plans
+
+Reports (later)
+
+🧠 WHY THIS DESIGN IS CORRECT
+
+✔ Matches real business flow
+✔ Matches GST law
+✔ Avoids refactor later
+✔ Same engine for invoice & quotation
+✔ Scales cleanly into inventory & POS
+
+This is exactly how professional ERPs are built.

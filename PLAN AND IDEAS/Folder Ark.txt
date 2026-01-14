@@ -1,0 +1,147 @@
+root/
+├── docker/
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── postgres/
+│       └── init.sql
+│
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+│
+├── src/
+│   ├── app/                         # Next.js App Router
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   │   ├── login/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── signup/
+│   │   │   │       └── route.ts
+│   │   │   │
+│   │   │   ├── admin/               # Platform owner APIs
+│   │   │   │   └── shops/
+│   │   │   │       └── route.ts
+│   │   │   │
+│   │   │   └── modules/             # Module-scoped APIs
+│   │   │       ├── invoicing/
+│   │   │       │   ├── create/
+│   │   │       │   │   └── route.ts
+│   │   │       │   └── list/
+│   │   │       │       └── route.ts
+│   │   │       ├── products/
+│   │   │       └── inventory/
+│   │   │
+│   │   ├── (auth)/                  # Auth UI routes
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   └── signup/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── (dashboard)/             # Shop dashboard routes
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── invoicing/
+│   │   │   ├── products/
+│   │   │   ├── inventory/
+│   │   │   └── pos/
+│   │   │
+│   │   └── layout.tsx
+│   │
+│   ├── modules/                     # ERP modules (Odoo-style)
+│   │   ├── invoicing/
+│   │   │   ├── ui/
+│   │   │   │   ├── InvoiceForm.tsx
+│   │   │   │   └── InvoiceList.tsx
+│   │   │   ├── api/
+│   │   │   │   └── invoice.api.ts
+│   │   │   ├── permissions.ts
+│   │   │   └── module.config.ts
+│   │   │
+│   │   ├── products/
+│   │   │   ├── ui/
+│   │   │   ├── api/
+│   │   │   ├── permissions.ts
+│   │   │   └── module.config.ts
+│   │   │
+│   │   ├── inventory/
+│   │   │   ├── ui/
+│   │   │   ├── api/
+│   │   │   └── module.config.ts
+│   │   │
+│   │   └── pos/
+│   │       ├── ui/
+│   │       ├── api/
+│   │       └── module.config.ts
+│   │
+│   ├── domain/                      # PURE business logic (no framework)
+│   │   ├── shop/
+│   │   │   ├── Shop.ts
+│   │   │   └── ShopPolicy.ts
+│   │   │
+│   │   ├── user/
+│   │   │   └── UserPolicy.ts
+│   │   │
+│   │   ├── dealer/
+│   │   │   ├── DealerRelation.ts
+│   │   │   └── DealerVisibilityPolicy.ts
+│   │   │
+│   │   ├── invoice/
+│   │   │   ├── Invoice.ts
+│   │   │   ├── InvoiceItem.ts
+│   │   │   ├── GstCalculator.ts
+│   │   │   └── InvoiceNumberGenerator.ts
+│   │   │
+│   │   ├── product/
+│   │   │   ├── Product.ts
+│   │   │   └── PricingPolicy.ts
+│   │   │
+│   │   ├── inventory/
+│   │   │   ├── StockLedger.ts
+│   │   │   └── StockMovement.ts
+│   │   │
+│   │   └── permissions/
+│   │       └── PermissionEngine.ts
+│   │
+│   ├── repositories/                # DB access ONLY
+│   │   ├── shop.repository.ts
+│   │   ├── user.repository.ts
+│   │   ├── product.repository.ts
+│   │   ├── invoice.repository.ts
+│   │   ├── inventory.repository.ts
+│   │   └── shopRelation.repository.ts
+│   │
+│   ├── services/                    # Application orchestration
+│   │   ├── auth.service.ts
+│   │   ├── invoice.service.ts
+│   │   ├── product.service.ts
+│   │   └── inventory.service.ts
+│   │
+│   ├── auth/
+│   │   ├── session.ts
+│   │   ├── password.ts
+│   │   └── auth.middleware.ts
+│   │
+│   ├── jobs/                        # Background jobs
+│   │   ├── invoicePdf.job.ts
+│   │   ├── csvExport.job.ts
+│   │   └── stockSync.job.ts
+│   │
+│   ├── lib/
+│   │   ├── prisma.ts
+│   │   ├── logger.ts
+│   │   ├── constants.ts
+│   │   └── utils.ts
+│   │
+│   ├── types/
+│   │   └── index.d.ts
+│   │
+│   └── middleware.ts                # Tenant resolution
+│
+├── scripts/
+│   ├── seed.ts
+│   └── create-module.ts
+│
+├── .env.example
+├── package.json
+├── tsconfig.json
+└── README.md
