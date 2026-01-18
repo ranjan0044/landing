@@ -67,15 +67,23 @@ export interface InvoiceTemplate {
   };
 }
 
+export interface CustomField {
+  id: string;
+  label: string;
+  value: string;
+}
+
 export type InvoiceType = 'tax' | 'non_tax';
 
 export interface InvoiceBuilderData {
   invoiceType: InvoiceType;
+  documentTitle: string; // Editable title (Invoice, Quotation, etc.)
   business: BusinessInfo;
   client: ClientInfo;
   invoiceNumber: string;
   issueDate: string;
   dueDate: string;
+  validTillDate?: string; // For quotations
   items: InvoiceItemInput[];
   taxRate: number;
   discount: number;
@@ -83,5 +91,6 @@ export interface InvoiceBuilderData {
   notes?: string;
   terms?: string;
   template: string;
+  customFields?: CustomField[]; // Custom fields array
 }
 

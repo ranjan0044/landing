@@ -12,7 +12,7 @@ interface InvoicePreviewProps {
 export default function InvoicePreview({ data }: InvoicePreviewProps) {
   const printRef = useRef<HTMLDivElement>(null);
   const selectedTemplate = invoiceTemplates.find((t) => t.id === data.template) || invoiceTemplates[0];
-  const totals = calculateInvoiceTotals(data.items, data.taxRate, data.discount);
+  const totals = calculateInvoiceTotals(data.items, data.taxRate, data.discount, data.currency);
 
   const isTaxInvoice = data.invoiceType === 'tax';
 

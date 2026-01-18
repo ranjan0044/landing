@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import InvoiceForm from './InvoiceForm';
-import InvoicePreview from './InvoicePreview';
+import InvoiceInlineEditor from './InvoiceInlineEditor';
 import { InvoiceBuilderData } from '../types/invoice-builder.types';
 import { generateInvoiceNumber } from '../utils/invoiceCalculations';
 
 const initialData: InvoiceBuilderData = {
   invoiceType: 'non_tax',
+  documentTitle: 'Invoice', // Editable document title
   business: {
     name: '',
     address: '',
@@ -38,6 +38,12 @@ const initialData: InvoiceBuilderData = {
   invoiceNumber: '',
   issueDate: new Date().toISOString().split('T')[0],
   dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  validTillDate: (() => {
+    const issueDate = new Date();
+    const dueDate = new Date(issueDate);
+    dueDate.setDate(dueDate.getDate() + 15); // Invoice date + 15 days
+    return dueDate.toISOString().split('T')[0];
+  })(), // Due date open by default (invoice date + 15 days)
   items: [
     {
       id: '1',
@@ -55,6 +61,7 @@ const initialData: InvoiceBuilderData = {
   notes: '',
   terms: '',
   template: 'modern',
+  customFields: [],
 };
 
 export default function InvoiceBuilder() {
@@ -75,38 +82,11 @@ export default function InvoiceBuilder() {
 
   return (
     <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: '1fr', 
-      gap: '2rem' 
+      minHeight: '100vh',
+      background: '#F9FAFB',
+      padding: '2rem 0',
     }}>
-      <style jsx>{`
-        @media (min-width: 1024px) {
-          .invoice-builder-grid {
-            grid-template-columns: 1fr 1fr !important;
-          }
-        }
-      `}</style>
-      <div className="invoice-builder-grid" style={{ 
-        display: 'grid', 
-        gridTemplateColumns: '1fr', 
-        gap: '2rem' 
-      }}>
-        {/* Left Side - Form */}
-        <div>
-          <InvoiceForm data={invoiceData} onUpdate={updateInvoiceData} />
-        </div>
-
-        {/* Right Side - Preview */}
-        <div style={{ 
-          position: 'sticky', 
-          top: '2rem', 
-          alignSelf: 'start',
-          maxHeight: 'calc(100vh - 4rem)',
-          overflowY: 'auto'
-        }}>
-          <InvoicePreview data={invoiceData} />
-        </div>
-      </div>
+      <InvoiceInlineEditor data={invoiceData} onUpdate={updateInvoiceData} />
     </div>
   );
 }
